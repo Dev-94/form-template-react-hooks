@@ -1,19 +1,20 @@
-import React from "react"
-import { useInput } from '../Hooks/InputHook'
+import React from 'react';
+import { useInput } from '../Hooks/InputHook';
 
 
 export default function NameForm(props) {
     // const [name, setName] = useState("")
     // const { value, bind, reset } = useInput('')
-    const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput('')
-    const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput('')
+    const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput('');
+    const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput('');
+    const { value: phoneNumber, bind: bindNumber, reset: resetNumber } = useInput('');
 
     const handleSubmit = (event) => {
-        alert(`Submitting ${firstName} ${lastName}`)
-        resetFirstName()
-        resetLastName()
-
-    }
+        alert(`Submitting ${firstName} ${lastName} ${phoneNumber}`);
+        resetFirstName();
+        resetLastName();
+        resetNumber();
+    };
     /* PSEUDOCODE FOR IMPLEMENTING NAME VALIDATION */
     // before it is submitted, it must be validated; after it is typed, it must be validated
     // event.preventDefault() has to happen before everything else
@@ -22,20 +23,33 @@ export default function NameForm(props) {
     // return true, handle submit fires off
     // return false, sends alert message 'please input valid name'
 
-    const validateName = (event, inputFirstName = bindFirstName.value, inputLastName = bindLastName.value) => {
+    const validate = (event, inputFirstName = bindFirstName.value, inputLastName = bindLastName.value, inputNumber = bindNumber.value) => {
         event.preventDefault()
-        const regex = /^\D{2,}$/
-        if (regex.test(inputFirstName) || regex.test(inputLastName)) handleSubmit()
-        else alert('Please input a valid name.')
+        const names = /^\D{2,}$/;
+        const number = /^\d{3}-\d{3}-\d{4}$/;
+        if (names.test(inputFirstName) && names.test(inputLastName)) {
+            if (number.test(inputNumber)) {
+                handleSubmit()
+            } else {
+                alert('Please follow the 000-000-0000 format.');
+            }
+        }
+        else alert('Please input valid information.');
     }
 
     return (
-        <form onSubmit={validateName}>
+        <form onSubmit={validate}>
+
             <label>
-                First Name: <input type="text" {...bindFirstName} />
+                First Name: <input type="text" placeholder="Jon" {...bindFirstName} />
             </label>
+
             <label>
-                Last Name: <input type="text" {...bindLastName} />
+                Last Name: <input type="text" placeholder="Doe" {...bindLastName} />
+            </label>
+
+            <label>
+                Phone Number: <input type="text" placeholder="000-000-0000" {...bindNumber} />
             </label>
 
             <input type="submit" value="Submit" />

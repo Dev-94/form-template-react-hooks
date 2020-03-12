@@ -8,12 +8,14 @@ export default function NameForm(props) {
     const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput('');
     const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput('');
     const { value: phoneNumber, bind: bindNumber, reset: resetNumber } = useInput('');
+    const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
 
     const handleSubmit = (event) => {
-        alert(`Submitting ${firstName} ${lastName} ${phoneNumber}`);
+        alert(`Submitting ${firstName} ${lastName} ${phoneNumber} ${email}`);
         resetFirstName();
         resetLastName();
         resetNumber();
+        resetEmail();
     };
     /* PSEUDOCODE FOR IMPLEMENTING NAME VALIDATION */
     // before it is submitted, it must be validated; after it is typed, it must be validated
@@ -23,11 +25,12 @@ export default function NameForm(props) {
     // return true, handle submit fires off
     // return false, sends alert message 'please input valid name'
 
-    const validate = (event, inputFirstName = bindFirstName.value, inputLastName = bindLastName.value, inputNumber = bindNumber.value) => {
+    const validate = (event, inputFirstName = bindFirstName.value, inputLastName = bindLastName.value, inputNumber = bindNumber.value, inputEmail = bindEmail.value) => {
         event.preventDefault()
         const names = /^\D{2,}$/;
         const number = /^\d{3}-\d{3}-\d{4}$/;
-        if (names.test(inputFirstName) && names.test(inputLastName)) {
+        const emails = /[\w-]+@([\w-]+\.)+[\w-]+/;
+        if (names.test(inputFirstName) && names.test(inputLastName) && emails.test(inputEmail)) {
             if (number.test(inputNumber)) {
                 handleSubmit()
             } else {
@@ -47,7 +50,9 @@ export default function NameForm(props) {
             <label>
                 Last Name: <input type="text" placeholder="Doe" {...bindLastName} />
             </label>
-
+            <label>
+                Email: <input type="text" placeholder="me@email.com" {...bindEmail} />
+            </label>
             <label>
                 Phone Number: <input type="text" placeholder="000-000-0000" {...bindNumber} />
             </label>
